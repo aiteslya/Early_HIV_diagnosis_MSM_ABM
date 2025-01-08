@@ -1,0 +1,93 @@
+---
+title: "HIV Transmission Dynamics Agent-Based Model"
+output: 
+  github_document:
+    toc: true
+---
+
+# HIV Transmission Dynamics Agent-Based Model
+
+This MATLAB project simulates HIV transmission dynamics within a population of men who have sex with men (MSM) in the Netherlands using an agent-based model (ABM). The model includes two phases: **calibration** and **main forward simulation**, with multiple scenarios that allow exploring various intervention simulating increase in diagnosis rates.
+
+## Project Overview
+
+1. **Calibration Phase**: This phase calibrates the model by to fit observed data in 2017-2022. Each calibration run is initialized by specifying the `pars_num` and `traj_num` parameters.
+2. **Main Forward Simulation Phase**: After calibration, this phase simulates intervention scenarios by altering diagnosis rates, allowing for comparisons between baseline and intervention scenarios. The simulation starts in 2023 and runs for 10 years.
+
+## Running the Simulation
+
+### 1. Calibration Phase
+
+To start the calibration, use the following function:
+
+```matlab
+Main_Traj(pars_num, traj_num)
+
+```
+
+- **`pars_num`**: Specifies the parameter number (runs from 1 to 100) used to load the configuration file.
+- **`traj_num`**: Specifies the trajectory number (runs from 1 to 20), representing different trajectories to capture model variability.
+
+**Example**:
+```matlab
+Main_Traj(1, 1)
+```
+
+### 2. Main Forward Simulation Phase
+
+Once calibration is complete, initiate the forward simulation with various intervention scenarios using:
+
+```matlab
+Main_Traj_Load(pars_num, traj_num, inter_str)
+```
+
+- **`pars_num`**: Same parameter number used in the calibration phase.
+- **`traj_num`**: Same trajectory number used in the calibration phase.
+- **`inter_str`**: A string specifying the intervention scenario. Available values:
+  - `'base'`: Baseline scenario with no increase in diagnosis rate.
+  - `'max'`: Maximum impact scenario.
+  - `'mult_XX_3m'`: Scenario where the diagnosis rate within the first 3 months of infection is increased by a factor of `XX` (values: 2, 4, 8, 16, 32).
+  - `'mult_XX'`: Scenario where the diagnosis rate within the first 6 months of infection is increased by a factor of `XX` (values: 2, 4, 8, 16, 32).
+
+**Example**:
+```matlab
+Main_Traj_Load(1, 1, 'mult_8_3m')
+```
+
+### Output Structure
+
+*Simulation outputs for calibration are saved in folders structured as follows:*
+
+```
+Output_par_num_pars_snum_batch_traj_num
+```
+
+*Simulation outputs for mainscenarios are saved in folders structured as follows:*
+
+```
+Output_par_num_pars_snum_batch_traj_num_inter_str
+```
+
+Each folder name reflects the parameter settings, trajectory number, and scenario used in that particular run, storing output data for each specific intervention scenario.
+
+## Intervention Scenarios Summary
+
+- **`base`**: Baseline scenario, no additional diagnosis interventions.
+- **`max`**: Maximum intervention impact scenario.
+- **`mult_XX_3m`**: Increased diagnosis rate within the first 3 months of infection by a factor of `XX`.
+- **`mult_XX`**: Increased diagnosis rate within the first 6 months of infection by a factor of `XX`.
+
+By running various scenarios, this model provides insights into the potential impact of increased diagnosis rates on HIV transmission dynamics within the MSM population.
+
+## Note
+
+Calibration rounds creates a folder **State** with subfolders **State_pars_XX_batch_YY**:
+
+- **`XX`**: Parameter number used in the calibration phase.
+- **`YY`**: Trajectory number used in the calibration phase.
+
+These folders contain snapshot of the population at the end of the calibration round, which is used to initialize the model in the main scenario simulation.
+
+---
+
+**Note**: Ensure that all dependencies are correctly installed and configured in MATLAB before running the simulations.
